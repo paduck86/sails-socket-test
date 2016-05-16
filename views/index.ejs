@@ -1,0 +1,73 @@
+<html>
+
+        <script   src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+        <script>
+
+            $(document).ready(function() {
+				io.socket.get('/helpdesk', function(resData) {
+					appendList(resData);
+				});
+
+				io.socket.on('message', function(event) {
+					//alert(event);
+					var id = event.id;
+					var html = $('#'+id).html();
+					$('#'+id).remove();
+					$('#completedList').append(html);
+
+				});
+            });
+
+			function appendList(tasks) {
+				var todoList = '',
+					completedList = '';
+
+				for (var i = 0; i < tasks.length; i++) {
+					var task = tasks[i];
+
+					if (!tasks.isCompleted) {
+						todoList += "<li id=\"" + task.id + "\">";
+						todoList += "<a href=\"helpdesk://open?id=" + task.id + "\">" + task.name + "</a>";
+						todoList += "</li>";
+					} else {
+						completedList += "<li>";
+						completedList += "<a href=\"helpdesk://open?id=" + task.id + "\">" + task.name + "</a>";
+						completedList += "</li>";
+					}
+				}
+
+				$('#todoList').append(todoList);
+				$('#completedList').append(completedList);
+			}
+
+
+        </script>
+	<head>
+		<title>HelpDesk Application</title>
+		<link rel="alternate" type="application/rss+xml" title="HelpDesk Request Feed" href="taskfeed">
+		<style>body { font-family: verdana; }</style>
+	</head>
+	<body>
+		<h1 style="color: red;">Open HelpDesk Requests</h1>
+		<ul id="todoList">
+			<!--<li><a href="helpdesk://open?id=10">Help Desk Request #10</a></li>
+			<li><a href="helpdesk://open?id=9">Help Desk Request #9</a></li>
+			<li><a href="helpdesk://open?id=8">Help Desk Request #8</a></li>
+			<li><a href="helpdesk://open?id=7">Help Desk Request #7</a></li>
+			<li><a href="helpdesk://open?id=6">Help Desk Request #6</a></li>
+			<li><a href="helpdesk://open?id=5">Help Desk Request #5</a></li>
+			<li><a href="helpdesk://open?id=4">Help Desk Request #4</a></li>
+			<li><a href="helpdesk://open?id=3">Help Desk Request #3</a></li>
+			<li><a href="helpdesk://open?id=2">Help Desk Request #2</a></li>
+			<li><a href="helpdesk://open?id=1">Help Desk Request #1</a></li>-->
+		</ul>
+			<h1 style="color: green;">Closed HelpDesk Requests</h1>
+		<ul id="completedList">
+
+		</ul>
+	</body>
+	<script src="/js/dependencies/sails.io.js"></script>
+	<script>
+
+	</script>
+</html>
